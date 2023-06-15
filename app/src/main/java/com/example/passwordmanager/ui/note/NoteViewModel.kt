@@ -21,7 +21,6 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
             notes = notes
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NoteState())
-//    val uiState: StateFlow<NoteState> = _uiState.asStateFlow()
 
     fun onEvent(event: NoteEvent) {
         when (event) {
@@ -41,6 +40,7 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
                     )
                 }
             }
+
             is NoteEvent.UpdateNote -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     noteDao.upsertNote(event.note)
@@ -56,7 +56,7 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
                 changeNote!!.stateDialog = !changeNote.stateDialog
                 _uiState.update {
                     it.copy(
-                        notes = state.value.notes.map {note ->
+                        notes = state.value.notes.map { note ->
                             if (note.id == event.note.id)
                                 changeNote
                             else note

@@ -1,17 +1,11 @@
 package com.example.passwordmanager
 
-import android.annotation.SuppressLint
 import android.view.Gravity
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -27,8 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -37,9 +29,7 @@ import com.example.passwordmanager.data.Note
 import com.example.passwordmanager.ui.note.NoteEvent
 
 
-//class FunctionDialog() {
 @OptIn(ExperimentalComposeUiApi::class)
-@SuppressLint("NotConstructor")
 @Composable
 fun FunctionDialog(
     modifier: Modifier = Modifier,
@@ -71,7 +61,6 @@ fun FunctionDialog(
                     label = R.string.label_app_name,
                     readOnly = readOnly
                 )
-//                    Spacer(modifier = Modifier.height(10.dp))
                 //Change password
                 ChangeField(
                     value = password,
@@ -122,12 +111,3 @@ fun ChangeField(value: String, onValueChange: (String) -> Unit, label: Int, read
         readOnly = readOnly
     )
 }
-
-
-//    @Preview(showSystemUi = true)
-//    @Composable
-//    fun Preview(
-//    ) {
-//        FunctionDialog()
-//    }
-//}

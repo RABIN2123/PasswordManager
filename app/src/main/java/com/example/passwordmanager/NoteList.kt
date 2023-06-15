@@ -15,8 +15,14 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,13 +56,21 @@ fun NoteList(
 
 @Composable
 fun NoteCard(modifier: Modifier = Modifier, note: Note, onEvent: (NoteEvent) -> Unit) {
+    var blur by remember { mutableStateOf(8.dp) }
     Card(
         modifier = modifier
             .padding(8.dp)
-            .pointerInput(Unit) {
+            .pointerInput(note.id) {
                 detectTapGestures(
                     onLongPress = {
                         onEvent(NoteEvent.ShowDialog(note))
+                    },
+                    onTap = {
+                        blur = if (blur == 8.dp) {
+                            0.dp
+                        } else {
+                            8.dp
+                        }
                     }
                 )
             }, elevation = 4.dp
@@ -72,7 +86,11 @@ fun NoteCard(modifier: Modifier = Modifier, note: Note, onEvent: (NoteEvent) -> 
             Text(
                 text = note.password,
                 style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier.blur(
+                    blur,
+                    edgeTreatment = BlurredEdgeTreatment.Rectangle
+                )
             )
         }
     }

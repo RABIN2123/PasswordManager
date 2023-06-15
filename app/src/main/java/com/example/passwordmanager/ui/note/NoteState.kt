@@ -3,7 +3,7 @@ package com.example.passwordmanager.ui.note
 import com.example.passwordmanager.data.Note
 
 
-data class NoteState (
+data class NoteState(
     val notes: List<Note> = emptyList(),
     val appName: String = "",
     val appPassword: String = "",

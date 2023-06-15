@@ -1,6 +1,5 @@
 package com.example.passwordmanager.data
 
-import androidx.compose.ui.res.stringResource
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -23,6 +22,4 @@ data class Note(
     ) {
         this.stateDialog = stateDialog
     }
-    //    @Ignore
-//    var stateDialog: Boolean = false
 }
