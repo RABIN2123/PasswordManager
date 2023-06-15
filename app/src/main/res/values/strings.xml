@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PasswordManager</string>
+    <string name="input_note">Input your data</string>
+    <string name="back_button">Back</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
+    <string name="change">Change parameters</string>
+    <string name="save">Save</string>
+    <string name="input_app_name">Input name your app</string>
+    <string name="input_password">Input password your app</string>
+    <string name="label_app_name">App name</string>
+    <string name="label_app_password">Password</string>
+</resources>
