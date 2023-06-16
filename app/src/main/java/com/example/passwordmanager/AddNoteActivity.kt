@@ -15,11 +15,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.passwordmanager.navigation.Screen
 import com.example.passwordmanager.ui.note.NoteEvent
 import com.example.passwordmanager.ui.note.NoteState
 
 @Composable
-fun InterfaceAddMenu(state: NoteState, onEvent: (NoteEvent) -> Unit) {
+fun InterfaceAddMenu(state: NoteState, onEvent: (NoteEvent) -> Unit, applyClick: () -> Unit) {
     val focusMananger = LocalFocusManager.current
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         //Input name app
@@ -45,13 +46,17 @@ fun InterfaceAddMenu(state: NoteState, onEvent: (NoteEvent) -> Unit) {
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
-                onDone = { focusMananger.clearFocus() }
+                onDone = {
+                    focusMananger.clearFocus()
+                    applyClick()
+                }
             )
         )
         onEvent(NoteEvent.SetApply)
     }
 
 }
+
 
 @Composable
 fun InputField(

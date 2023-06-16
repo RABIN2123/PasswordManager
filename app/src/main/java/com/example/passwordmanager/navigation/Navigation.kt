@@ -95,7 +95,12 @@ fun NavigationView(state: NoteState, onEvent: (NoteEvent) -> Unit) {
                 )
             }
             composable(Screen.Add.name) {
-                InterfaceAddMenu(state, onEvent)
+                InterfaceAddMenu(state, onEvent) {
+                    if (state.stateApply) {
+                        onEvent(NoteEvent.SaveNote)
+                        navController.popBackStack(Screen.Home.name, inclusive = false)
+                    }
+                }
             }
         }
     }

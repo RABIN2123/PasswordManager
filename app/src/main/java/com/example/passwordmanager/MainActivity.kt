@@ -1,5 +1,6 @@
 package com.example.passwordmanager
 
+//import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,13 +18,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.passwordmanager.navigation.NavigationView
 import com.example.passwordmanager.ui.note.NoteViewModel
+import net.sqlcipher.database.SQLiteDatabase
+import net.sqlcipher.database.SupportFactory
 
 class MainActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val passphrase: ByteArray = SQLiteDatabase.getBytes("secret".toCharArray())
+        val factory = SupportFactory(passphrase)
         val database =
-            Room.databaseBuilder(this@MainActivity, NoteDatabase::class.java, "database.db").build()
+            Room.databaseBuilder(this@MainActivity, NoteDatabase::class.java, "database.db")
+                .openHelperFactory(factory).build()
         val noteDao = database.dao
         val viewModel by viewModels<NoteViewModel>(
             factoryProducer = {
@@ -45,7 +51,7 @@ class MainActivity : ComponentActivity() {
 //                    val notesFlow = noteDao.getNotesFlow()
 //                    val noteState = notesFlow.collectAsState(listOf())
                     val state by viewModel.state.collectAsState()
-                    NavigationView(state, viewModel:: onEvent)
+                    NavigationView(state, viewModel::onEvent)
                 }
             }
         }
