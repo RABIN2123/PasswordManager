@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.passwordmanager.navigation.Screen
 import com.example.passwordmanager.ui.note.NoteEvent
 import com.example.passwordmanager.ui.note.NoteState
 
@@ -26,7 +25,6 @@ fun InterfaceAddMenu(state: NoteState, onEvent: (NoteEvent) -> Unit, applyClick:
         //Input name app
         InputField(
             state.appName,
-            onValueChange = { onEvent(NoteEvent.SetAppName(it)) },
             label = R.string.label_app_name,
             placeholder = R.string.input_app_name,
             keyboardOptions = KeyboardOptions(
@@ -34,12 +32,12 @@ fun InterfaceAddMenu(state: NoteState, onEvent: (NoteEvent) -> Unit, applyClick:
             ),
             keyboardActions = KeyboardActions(
                 onNext = { focusMananger.moveFocus(FocusDirection.Down) }
-            ),
-        )
+            )
+        ) {newName -> onEvent(NoteEvent.SetAppName(newName))}
         //Input password app
         InputField(
             state.appPassword,
-            onValueChange = { onEvent(NoteEvent.SetPassword(it)) },
+
             label = R.string.label_app_password,
             placeholder = R.string.input_password,
             keyboardOptions = KeyboardOptions(
@@ -51,7 +49,7 @@ fun InterfaceAddMenu(state: NoteState, onEvent: (NoteEvent) -> Unit, applyClick:
                     applyClick()
                 }
             )
-        )
+        ) {newPassword -> onEvent(NoteEvent.SetPassword(newPassword)) }
         onEvent(NoteEvent.SetApply)
     }
 
@@ -61,11 +59,11 @@ fun InterfaceAddMenu(state: NoteState, onEvent: (NoteEvent) -> Unit, applyClick:
 @Composable
 fun InputField(
     value: String,
-    onValueChange: (String) -> Unit,
     label: Int,
     placeholder: Int,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
+    onValueChange: (String) -> Unit
 ) {
     TextField(
         value = value,

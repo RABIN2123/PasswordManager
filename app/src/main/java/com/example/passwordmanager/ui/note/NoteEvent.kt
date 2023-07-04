@@ -1,13 +1,14 @@
 package com.example.passwordmanager.ui.note
 
 import com.example.passwordmanager.data.Note
+import com.example.passwordmanager.data.NoteRepo
 
 sealed interface NoteEvent {
     object SaveNote : NoteEvent
     object SetApply : NoteEvent
-    data class ShowDialog(val note: Note) : NoteEvent
-    data class SetAppName(val appName: String) : NoteEvent
-    data class SetPassword(val password: String) : NoteEvent
-    data class DeleteNote(val note: Note) : NoteEvent
-    data class UpdateNote(val note: Note) : NoteEvent
+    class ShowDialog(val note: NoteRepo) : NoteEvent
+    class SetAppName(val appName: String) : NoteEvent
+    class SetPassword(val password: String) : NoteEvent
+    class DeleteNote(val note: NoteRepo) : NoteEvent
+    class UpdateNote(val note: Note) : NoteEvent
 }

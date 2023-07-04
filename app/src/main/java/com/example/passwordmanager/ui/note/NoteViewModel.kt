@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passwordmanager.data.Note
 import com.example.passwordmanager.data.NoteDao
+import com.example.passwordmanager.data.NoteRepo
+import com.example.passwordmanager.data.NoteRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,13 +16,23 @@ import kotlinx.coroutines.launch
 
 
 class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
-    private val _notesFlow = noteDao.getNotesFlow()
+    private val noteRepository = NoteRepositoryImpl(noteDao)
+    private val _notesFlow = noteRepository.getNotesFlow()
     private val _uiState = MutableStateFlow(NoteState())
     val state = combine(_uiState, _notesFlow) { state, notes ->
         state.copy(
             notes = notes
+                .map { note ->
+                    NoteRepo(
+                        note.id, note.appName, note.password,
+                        updateDialogInState(state, note))
+                }
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NoteState())
+    private val updateDialogInState: (NoteState, Note) -> Boolean = { state, note ->
+        val dialogShow = state.notes.find { it.id == note.id }
+        dialogShow?.stateDialog ?: false
+    }
 
     fun onEvent(event: NoteEvent) {
         when (event) {
@@ -30,7 +42,7 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
                     password = state.value.appPassword
                 )
                 viewModelScope.launch(Dispatchers.IO) {
-                    noteDao.upsertNote(note)
+                    noteRepository.insertNote(note)
                 }
                 _uiState.update {
                     it.copy(
@@ -43,36 +55,30 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
 
             is NoteEvent.UpdateNote -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    noteDao.upsertNote(event.note)
-                }
-                _uiState.update {
-                    it.copy()
+                    noteRepository.updateNote(event.note)
                 }
             }
 
             is NoteEvent.ShowDialog -> {
-                val changeNote = state.value.notes.find { it.id == event.note.id }
-                // TODO пофиксить костыль//
-                changeNote!!.stateDialog = !changeNote.stateDialog
+                val changeNote = state.value.notes.find { it.id == event.note.id } ?: NoteRepo(appName = "", password = "")
                 _uiState.update {
                     it.copy(
                         notes = state.value.notes.map { note ->
                             if (note.id == event.note.id)
-                                changeNote
+                                changeNote.copy(stateDialog = !changeNote.stateDialog)
                             else note
                         },
-                        testState = !it.testState
                     )
                 }
             }
 
             is NoteEvent.DeleteNote -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    noteDao.deleteNote(event.note)
-                }
-                _uiState.update {
-                    it.copy(
-                    )
+                    val note: Note
+                    with(event.note) {
+                        note = Note(id, appName, password)
+                    }
+                    noteRepository.deleteNote(note)
                 }
             }
 

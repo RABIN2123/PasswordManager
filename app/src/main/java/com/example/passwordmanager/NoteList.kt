@@ -28,13 +28,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.passwordmanager.data.Note
+import com.example.passwordmanager.data.NoteRepo
 import com.example.passwordmanager.navigation.Screen
 import com.example.passwordmanager.ui.note.NoteEvent
 
 @Composable
 fun NoteList(
-    noteState: List<Note>,
+    noteState: List<NoteRepo>,
     navController: NavHostController,
     onEvent: (NoteEvent) -> Unit,
 ) {
@@ -55,7 +55,7 @@ fun NoteList(
 }
 
 @Composable
-fun NoteCard(modifier: Modifier = Modifier, note: Note, onEvent: (NoteEvent) -> Unit) {
+fun NoteCard(modifier: Modifier = Modifier, note: NoteRepo, onEvent: (NoteEvent) -> Unit) {
     var blur by remember { mutableStateOf(8.dp) }
     Card(
         modifier = modifier

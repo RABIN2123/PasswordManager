@@ -1,6 +1,7 @@
 package com.example.passwordmanager
 
 //import android.database.sqlite.SQLiteDatabase
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,18 +15,24 @@ import androidx.room.Room
 import com.example.passwordmanager.data.NoteDatabase
 import com.example.passwordmanager.ui.theme.PasswordManagerTheme
 import androidx.compose.runtime.*
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.passwordmanager.data.CryptoManager
 import com.example.passwordmanager.navigation.NavigationView
 import com.example.passwordmanager.ui.note.NoteViewModel
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
 
-class MainActivity : ComponentActivity() {
+private const val KEY_ENCRYPTED_TEXT = "password_for_db"
 
+class MainActivity : ComponentActivity() {
+    private val prefs by lazy {
+        getSharedPreferences("secret_prefs", Context.MODE_PRIVATE)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val passphrase: ByteArray = SQLiteDatabase.getBytes("secret".toCharArray())
+        val passphrase: ByteArray = SQLiteDatabase.getBytes(getSecretKey())
         val factory = SupportFactory(passphrase)
         val database =
             Room.databaseBuilder(this@MainActivity, NoteDatabase::class.java, "database.db")
@@ -47,14 +54,23 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    //Как напоминалка о том как можно делать
-//                    val notesFlow = noteDao.getNotesFlow()
-//                    val noteState = notesFlow.collectAsState(listOf())
                     val state by viewModel.state.collectAsState()
                     NavigationView(state, viewModel::onEvent)
                 }
             }
         }
+    }
+
+    private fun getSecretKey(): CharArray {
+        var savedKey = prefs.getString("Key", null) ?: ""
+        val cryptoManager = CryptoManager.create(this)
+        if(savedKey.isEmpty()) {
+            savedKey = cryptoManager.createPassword()
+            prefs.edit {
+                putString("Key", savedKey)
+            }
+        }
+        return cryptoManager.decrypt(savedKey).toCharArray()
     }
 }
 

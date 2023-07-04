@@ -11,6 +11,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,14 +27,16 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.example.passwordmanager.data.Note
+import com.example.passwordmanager.data.NoteRepo
 import com.example.passwordmanager.ui.note.NoteEvent
+
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FunctionDialog(
     modifier: Modifier = Modifier,
-    note: Note,
+    note: NoteRepo,
     onEvent: (NoteEvent) -> Unit,
 
     ) {
@@ -77,11 +80,7 @@ fun FunctionDialog(
                         !readOnly
                     }
                 }, modifier = Modifier.fillMaxWidth()) {
-                    if (readOnly) {
-                        Text(text = stringResource(id = R.string.change))
-                    } else {
-                        Text(text = stringResource(id = R.string.save))
-                    }
+                    Text(text = stringResource(id = if (readOnly) R.string.change else R.string.save))
                 }
                 Button(
                     onClick = { onEvent(NoteEvent.DeleteNote(note)) },
@@ -91,9 +90,15 @@ fun FunctionDialog(
                     Text(text = stringResource(id = R.string.delete))
                 }
             }
+
             val dialogWindow = LocalView.current.parent as DialogWindowProvider
-            dialogWindow.window.setGravity(Gravity.BOTTOM)
-            dialogWindow.window.setDimAmount(0f)
+            LaunchedEffect(Unit) {
+                with(dialogWindow.window) {
+                    setGravity(Gravity.BOTTOM)
+                    setDimAmount(0f)
+                }
+            }
+
         }
     }
 
@@ -107,7 +112,7 @@ fun ChangeField(value: String, onValueChange: (String) -> Unit, label: Int, read
         label = { Text(stringResource(id = label)) },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, 5.dp),
+            .padding(vertical = 5.dp),
         readOnly = readOnly
     )
 }

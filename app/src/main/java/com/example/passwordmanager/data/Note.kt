@@ -2,24 +2,31 @@ package com.example.passwordmanager.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "note")
+@Entity(tableName = Note.TABLE_NAME)
 data class Note(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id") val id: Int = 0,
-    @ColumnInfo(name = "app_name") var appName: String,
-    @ColumnInfo(name = "password") var password: String,
+    @ColumnInfo(name = COLUMN_ID) val id: Int = 0,
+    @ColumnInfo(name = COLUMN_APP_NAME) val appName: String,
+    @ColumnInfo(name = COLUMN_PASSWORD) val password: String,
 ) {
-    @Ignore
-    var stateDialog: Boolean = false
 
-    constructor(id: Int, appName: String, password: String, stateDialog: Boolean) : this(
-        id,
-        appName,
-        password
-    ) {
-        this.stateDialog = stateDialog
+    companion object {
+        const val TABLE_NAME = "note"
+        const val COLUMN_ID = "id"
+        const val COLUMN_APP_NAME = "app_name"
+        const val COLUMN_PASSWORD = "password"
     }
+
 }
+
+data class NoteRepo(
+    val id: Int = 0,
+    val appName: String,
+    val password: String,
+    var stateDialog: Boolean = false
+)
+
+
+
