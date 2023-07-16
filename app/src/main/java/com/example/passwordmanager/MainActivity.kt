@@ -1,6 +1,5 @@
 package com.example.passwordmanager
 
-//import android.database.sqlite.SQLiteDatabase
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,7 +23,6 @@ import com.example.passwordmanager.ui.note.NoteViewModel
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
 
-private const val KEY_ENCRYPTED_TEXT = "password_for_db"
 
 class MainActivity : ComponentActivity() {
     private val prefs by lazy {

@@ -21,7 +21,7 @@ data class Note(
 
 }
 
-data class NoteRepo(
+data class NoteLocal(
     val id: Int = 0,
     val appName: String,
     val password: String,

@@ -27,7 +27,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.example.passwordmanager.data.Note
-import com.example.passwordmanager.data.NoteRepo
+import com.example.passwordmanager.data.NoteLocal
 import com.example.passwordmanager.ui.note.NoteEvent
 
 
@@ -36,7 +36,7 @@ import com.example.passwordmanager.ui.note.NoteEvent
 @Composable
 fun FunctionDialog(
     modifier: Modifier = Modifier,
-    note: NoteRepo,
+    note: NoteLocal,
     onEvent: (NoteEvent) -> Unit,
 
     ) {

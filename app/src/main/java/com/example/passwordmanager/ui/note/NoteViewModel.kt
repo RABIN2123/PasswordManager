@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passwordmanager.data.Note
 import com.example.passwordmanager.data.NoteDao
-import com.example.passwordmanager.data.NoteRepo
+import com.example.passwordmanager.data.NoteLocal
 import com.example.passwordmanager.data.NoteRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,7 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
         state.copy(
             notes = notes
                 .map { note ->
-                    NoteRepo(
+                    NoteLocal(
                         note.id, note.appName, note.password,
                         updateDialogInState(state, note))
                 }
@@ -60,7 +60,7 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
             }
 
             is NoteEvent.ShowDialog -> {
-                val changeNote = state.value.notes.find { it.id == event.note.id } ?: NoteRepo(appName = "", password = "")
+                val changeNote = state.value.notes.find { it.id == event.note.id } ?: NoteLocal(appName = "", password = "")
                 _uiState.update {
                     it.copy(
                         notes = state.value.notes.map { note ->
