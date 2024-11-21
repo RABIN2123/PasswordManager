@@ -2,7 +2,7 @@ package com.example.passwordmanager.ui.note
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.passwordmanager.data.Note
+import com.example.passwordmanager.data.NoteEntity
 import com.example.passwordmanager.data.NoteDao
 import com.example.passwordmanager.data.NoteLocal
 import com.example.passwordmanager.data.NoteRepositoryImpl
@@ -29,7 +29,7 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
                 }
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NoteState())
-    private val updateDialogInState: (NoteState, Note) -> Boolean = { state, note ->
+    private val updateDialogInState: (NoteState, NoteEntity) -> Boolean = { state, note ->
         val dialogShow = state.notes.find { it.id == note.id }
         dialogShow?.stateDialog ?: false
     }
@@ -37,7 +37,7 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
     fun onEvent(event: NoteEvent) {
         when (event) {
             NoteEvent.SaveNote -> {
-                val note = Note(
+                val note = NoteEntity(
                     appName = state.value.appName,
                     password = state.value.appPassword
                 )
@@ -74,9 +74,9 @@ class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
 
             is NoteEvent.DeleteNote -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val note: Note
+                    val note: NoteEntity
                     with(event.note) {
-                        note = Note(id, appName, password)
+                        note = NoteEntity(id, appName, password)
                     }
                     noteRepository.deleteNote(note)
                 }

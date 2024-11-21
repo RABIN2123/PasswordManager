@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
-import com.example.passwordmanager.data.Note
+import com.example.passwordmanager.data.NoteEntity
 import com.example.passwordmanager.data.NoteLocal
 import com.example.passwordmanager.ui.note.NoteEvent
 
@@ -75,7 +75,7 @@ fun FunctionDialog(
                     readOnly = if (readOnly) {
                         !readOnly
                     } else {
-                        val changeNote = Note(note.id, appName, password)
+                        val changeNote = NoteEntity(note.id, appName, password)
                         onEvent(NoteEvent.UpdateNote(changeNote))
                         !readOnly
                     }
